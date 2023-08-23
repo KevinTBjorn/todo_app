@@ -1,5 +1,5 @@
 import { UIButton, UIDivider, UIInput, UIList, UIListItem, UIPageHeader } from "@apollo/apollo-ui-reactjs";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { ITask } from './Interface';
 import { TodoTask } from "./Component/TodoTask";
 
@@ -13,6 +13,49 @@ export function App() {
     if(event.target.name === "task"){
       setTask(event.target.value);
     }
+  }
+  
+  useEffect(() => {
+    fetch("")
+      .then((reponse) => reponse.json())
+      .then((data) => {
+        setTodo([]);
+        for(var i = 0; i < data.length; i++){
+          const newTask ={
+            taskName:data.title[i],
+            indicatorNum:data.id[i],
+            check:false
+          }
+          setTodo([...todo, newTask])
+        }
+      })
+      .catch((err) => {
+        console.log(err.message)
+      });
+  }, []);
+
+  const postTask = async () => {
+    await fetch("", {
+      method: "post",
+      body: JSON.stringify({
+        title: task,
+      }),
+      headers: {
+        "content-type": "application/json; charset=UTF-8",
+      },
+    })
+    .then((reponse) => reponse.json())
+    .then((data) => {
+      const newTask ={
+        taskName:data.title,
+        indicatorNum:data.id,
+        check:false
+      }
+      setTodo([...todo, newTask])
+    })
+    .catch((err) => {
+      console.log(err.message);
+   });
   }
 
   const addTask = () =>{
