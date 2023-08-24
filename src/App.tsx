@@ -16,19 +16,21 @@ export function App() {
   }
   
   useEffect(() => {
-    fetch("")
-      .then((reponse) => reponse.json())
-      .then((data) => {
-        setTodo([]);
-        for(var i = 0; i < data.length; i++){
-          const newTask ={
-            taskName:data.title[i],
-            indicatorNum:data.id[i],
-            check:false
-          }
-          setTodo([...todo, newTask])
-        }
-      })
+    fetch('https://kbj-todo-backend.azurewebsites.net/api/TodoTasks')
+    .then(t => console.log(t))
+      // .then(reponse => reponse.json() )
+      // .then(data => {
+      //   setTodo([]);
+      //   for(var i = 0; i < data.length; i++){
+      //     console.log(data.title[i])
+      //     const newTask ={
+      //       taskName:data.title[i],
+      //       indicatorNum:data.id[i],
+      //       check:false
+      //     }
+      //     setTodo([...todo, newTask])
+      //   }
+      // })
       .catch((err) => {
         console.log(err.message)
       });

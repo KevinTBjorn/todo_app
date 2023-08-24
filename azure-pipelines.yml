@@ -23,4 +23,4 @@ steps:
     docker push kbjregistry.azurecr.io/kbjregistry/todo-app
     curl -X 'POST' '$(webhook)'
     
-  displayName: 'npm install and build'
+  displayName: 'build and deploy to azure web app'
