@@ -2,10 +2,10 @@ import { UIButton, UIDivider, UIInput, UIList, UIListItem, UIPageHeader } from "
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { ITask } from './Interface';
 import { TodoTask } from "./Component/TodoTask";
+import { title } from "process";
 
 export function App() {
   const [ task, setTask ] = useState<string>("");
-  const [ indicator, setIndicator]  = useState<number>(0);
   const [ todo, setTodo ] = useState<ITask[]>([]);
   const [ inputCheck, setInputCheck ] = useState<boolean>(false);
   
@@ -14,70 +14,76 @@ export function App() {
       setTask(event.target.value);
     }
   }
+
+  const taskTemplate = (data) => {
+    const task = {
+      taskName:data.title,
+      indicatorNum:data.id,
+      check:false
+    }
+    return task;
+  }
   
   useEffect(() => {
-    fetch('https://kbj-todo-backend.azurewebsites.net/api/TodoTasks')
-    .then(t => console.log(t))
-      // .then(reponse => reponse.json() )
-      // .then(data => {
-      //   setTodo([]);
-      //   for(var i = 0; i < data.length; i++){
-      //     console.log(data.title[i])
-      //     const newTask ={
-      //       taskName:data.title[i],
-      //       indicatorNum:data.id[i],
-      //       check:false
-      //     }
-      //     setTodo([...todo, newTask])
-      //   }
-      // })
-      .catch((err) => {
-        console.log(err.message)
-      });
+    updateTodoList()
   }, []);
 
-  const postTask = async () => {
-    await fetch("", {
-      method: "post",
-      body: JSON.stringify({
-        title: task,
-      }),
-      headers: {
-        "content-type": "application/json; charset=UTF-8",
-      },
-    })
-    .then((reponse) => reponse.json())
-    .then((data) => {
-      const newTask ={
-        taskName:data.title,
-        indicatorNum:data.id,
-        check:false
+  const updateTodoList = () => {
+    fetch('https://kbj-todo-backend.azurewebsites.net/api/TodoTasks')
+    .then(reponse => reponse.json() )
+    .then(data => {
+      setTodo([]);
+      const array: ITask[] = []
+      for(var i = 0; i < data.length; i++){
+        const newTask = taskTemplate(data[i])
+        array.push(newTask)
       }
-      setTodo([...todo, newTask])
+      setTodo(array)
     })
-    .catch((err) => {
-      console.log(err.message);
-   });
+    .catch(err => {
+      console.log(err.message)
+    });
   }
 
-  const addTask = () =>{
+  const postTask = () => {
     if(task.trim().length !== 0 )
     {
-      setIndicator(indicator + 1);
-      const newTask ={
-        taskName:task,
-        indicatorNum:indicator,
-        check:false
-      }
-      setTodo([...todo, newTask])
-      setTask("");
-      setInputCheck(false);
+      fetch('https://kbj-todo-backend.azurewebsites.net/api/TodoTasks', {
+        method: "post",
+        body: JSON.stringify({
+          title: task,
+        }),
+        headers: {
+          "content-type": "application/json; charset=UTF-8",
+        },
+      })
+      .then(reponse => reponse.json())
+      .then(data => {
+        const newTask = taskTemplate(data)
+        setTodo([...todo, newTask])
+        setTask("");
+        setInputCheck(false);
+      })
+      .catch(err => {
+        console.log(err.message);
+     });
     }
     else
     {
       setTask("");
       setInputCheck(true);
     }
+    
+  }
+
+  const completeTaskDelete = (taskNumberToDelete:number) => {
+    fetch(`https://kbj-todo-backend.azurewebsites.net/api/TodoTasks/${taskNumberToDelete}`, {
+      method: "delete"
+    })
+    .then(reponse => updateTodoList())
+    .catch(err => {
+      console.log(err.message);
+   });
   }
 
   const completeTask = (taskNumberToDelete:number) =>{
@@ -116,11 +122,11 @@ export function App() {
          required
          width={1000}
          />
-      <UIButton onClick={addTask} theme="primary">Add</UIButton>
+      <UIButton onClick={postTask} theme="primary">Add</UIButton>
       <UIDivider/>
       <UIList>
         {todo.map((task:ITask, key:number)=>{
-          return <TodoTask task={task} key={key} handleToggle={handleToggle} completeTask={completeTask} />
+          return <TodoTask task={task} key={key} handleToggle={handleToggle} completeTask={completeTaskDelete} />
         })}
       </UIList>
       <UIDivider/>
