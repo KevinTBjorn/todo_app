@@ -19,7 +19,7 @@ steps:
     npm install
     npm run build
     echo $(password) | docker login kbjregistry.azurecr.io -u $(username) --password-stdin
-    docker -t  kbjregistry.azurecr.io/kbjregistry/todo-app
+    docker build . -t  kbjregistry.azurecr.io/kbjregistry/todo-app
     docker push kbjregistry.azurecr.io/kbjregistry/todo-app
     curl -X 'POST' '$(webhook)'
     
