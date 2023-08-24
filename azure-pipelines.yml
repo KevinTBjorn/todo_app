@@ -16,9 +16,9 @@ steps:
   displayName: 'Install Node.js'
 
 - script: |
-    echo $(password) | docker login kbjregistry.azurecr.io -u $(username) --password-stdin
     npm install
     npm run build
+    echo $(password) | docker login kbjregistry.azurecr.io -u $(username) --password-stdin
     docker -t  kbjregistry.azurecr.io/kbjregistry/todo-app
     docker push kbjregistry.azurecr.io/kbjregistry/todo-app
     curl -X 'POST' '$(webhook)'

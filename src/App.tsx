@@ -86,11 +86,11 @@ export function App() {
    });
   }
 
-  const completeTask = (taskNumberToDelete:number) =>{
-    setTodo(todo.filter((task)=>{
-      return task.indicatorNum !== taskNumberToDelete
-    }))
-  }
+  // const completeTask = (taskNumberToDelete:number) =>{
+  //   setTodo(todo.filter((task)=>{
+  //     return task.indicatorNum !== taskNumberToDelete
+  //   }))
+  // }
 
   const deleteAllTask = () =>{
     setTodo([]);
