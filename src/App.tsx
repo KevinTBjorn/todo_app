@@ -15,6 +15,19 @@ export function App() {
     }
   }
 
+  const apiURL = () => {
+    let url;
+    if(process.env.URL != undefined)
+    {
+      url = process.env.apiURL;
+    }
+    else
+    {
+      url = 'https://kbj-todo-backend.azurewebsites.net/api/TodoTasks';
+    }
+    return url;
+  }
+
   const taskTemplate = (data) => {
     const task = {
       taskName:data.title,
@@ -29,7 +42,7 @@ export function App() {
   }, []);
 
   const updateTodoList = () => {
-    fetch('https://kbj-todo-backend.azurewebsites.net/api/TodoTasks')
+    fetch(apiURL())
     .then(reponse => reponse.json() )
     .then(data => {
       setTodo([]);
@@ -48,7 +61,7 @@ export function App() {
   const postTask = () => {
     if(task.trim().length !== 0 )
     {
-      fetch('https://kbj-todo-backend.azurewebsites.net/api/TodoTasks', {
+      fetch(apiURL(), {
         method: "post",
         body: JSON.stringify({
           title: task,
@@ -77,7 +90,7 @@ export function App() {
   }
 
   const completeTaskDelete = (taskNumberToDelete:number) => {
-    fetch(`https://kbj-todo-backend.azurewebsites.net/api/TodoTasks/${taskNumberToDelete}`, {
+    fetch(`${apiURL()}/${taskNumberToDelete}`, {
       method: "delete"
     })
     .then(reponse => updateTodoList())
@@ -87,7 +100,7 @@ export function App() {
   }
 
   const deleteAllTask = () =>{
-    fetch(`https://kbj-todo-backend.azurewebsites.net/api/TodoTasks/deleteAll`, {
+    fetch(`${apiURL()}/deleteAll`, {
       method: "delete"
     })
     .then(reponse => updateTodoList())
@@ -108,7 +121,6 @@ export function App() {
 
     setTodo(newChecked);
   };
-
     return (
       <>
       <UIPageHeader title="Todo app"/>
