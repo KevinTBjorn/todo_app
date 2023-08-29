@@ -17,6 +17,8 @@ steps:
 
 - script: |
     npm install
+    npm start
+    npx playwright test FirstTest.spec.ts
     npm run build
     echo $(password) | docker login kbjregistry.azurecr.io -u $(username) --password-stdin
     docker build . -t  kbjregistry.azurecr.io/kbjregistry/todo-app
