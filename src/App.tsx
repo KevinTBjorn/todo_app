@@ -86,14 +86,14 @@ export function App() {
    });
   }
 
-  // const completeTask = (taskNumberToDelete:number) =>{
-  //   setTodo(todo.filter((task)=>{
-  //     return task.indicatorNum !== taskNumberToDelete
-  //   }))
-  // }
-
   const deleteAllTask = () =>{
-    setTodo([]);
+    fetch(`https://kbj-todo-backend.azurewebsites.net/api/TodoTasks/deleteAll`, {
+      method: "delete"
+    })
+    .then(reponse => updateTodoList())
+    .catch(err => {
+      console.log(err.message);
+   });
   }
 
   const handleToggle = (value:number) => {

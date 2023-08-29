@@ -11,4 +11,5 @@ test('test', async ({ page }) => {
   await page.getByRole('button', { name: 'Add' }).click();
   await page.getByRole('button').nth(2).click();
   await page.getByRole('button').nth(1).click();
+  await page.getByRole('button', { name: 'Delete all' }).click();
 });
