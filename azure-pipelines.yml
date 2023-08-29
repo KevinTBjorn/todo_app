@@ -19,6 +19,8 @@ steps:
     npm install
     npx playwright install
     npx playwright install-deps
+    npm install -g json-server
+    json-server --watch db.json
     npx playwright test tests/TodoTest.spec.ts
     npm run build
     echo $(password) | docker login kbjregistry.azurecr.io -u $(username) --password-stdin
