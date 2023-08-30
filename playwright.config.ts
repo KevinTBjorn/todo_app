@@ -69,9 +69,14 @@ export default defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-  webServer: {
+  webServer: [
+  {
     command: 'npm start',
     url: 'http://localhost:1234',
     reuseExistingServer: !process.env.CI,
   },
+  {
+    command: 'json-server --watch db.json',
+  }
+]
 });
