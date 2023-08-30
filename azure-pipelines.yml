@@ -16,11 +16,10 @@ steps:
   displayName: 'Install Node.js'
 
 - script: |
-    npm install
-    npx playwright install
-    npx playwright install-deps
+    npm ci
+    npx playwright install --with-deps
     npm install -g json-server
-    json-server --watch db.json
+
     npx playwright test tests/TodoTest.spec.ts
     npm run build
     echo $(password) | docker login kbjregistry.azurecr.io -u $(username) --password-stdin
